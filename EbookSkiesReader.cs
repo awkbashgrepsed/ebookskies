@@ -222,7 +222,7 @@ namespace EbookSkies
             bar.Items.Add(new ToolStripSeparator()); bar.Items.Add(searchBox); bar.Items.Add(find);
             Controls.Add(bar);
 
-            SplitContainer split = new SplitContainer(); split.Dock = DockStyle.Fill; split.SplitterDistance = 165; split.FixedPanel = FixedPanel.Panel1; split.Panel1MinSize = 110; split.Panel2MinSize = 280;
+            SplitContainer split = new SplitContainer(); split.Size = new Size(800, 600); split.Dock = DockStyle.Fill; split.FixedPanel = FixedPanel.Panel1; split.Panel1MinSize = 110; split.Panel2MinSize = 280; split.SplitterDistance = 165;
             toc = new TreeView(); toc.Dock = DockStyle.Fill; toc.HideSelection = false;
             toc.AfterSelect += (s, e) => { BookItem bi = e.Node.Tag as BookItem; if (bi != null) OpenChapter(bi.SpineIndex, bi.Fragment); };
             split.Panel1.Controls.Add(toc);
