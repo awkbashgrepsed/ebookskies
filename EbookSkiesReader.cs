@@ -177,7 +177,7 @@ namespace EbookSkies
                 {
                     XDocument doc = XDocument.Load(item.FilePath, LoadOptions.PreserveWhitespace);
                     foreach (XElement script in doc.Descendants().Where(x => x.Name.LocalName.Equals("script", StringComparison.OrdinalIgnoreCase)).ToList()) script.Remove();
-                    foreach (XElement el in doc.DescendantsAndSelf())
+                    foreach (XElement el in doc.Root.DescendantsAndSelf())
                         foreach (XAttribute a in el.Attributes().Where(x => x.Name.LocalName.StartsWith("on", StringComparison.OrdinalIgnoreCase)).ToList()) a.Remove();
                     doc.Save(item.FilePath);
                 }
@@ -331,7 +331,7 @@ namespace EbookSkies
             try
             {
                 string q = searchBox.Text.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "\\n");
-                object found = browser.Document.InvokeScript("eval", new object[] { "(function(){var q=\"" + q + "\";if(!q)return false;return window.find?window.find(q,false,false,true,false,false,false):false;})()" });
+                object found = browser.Document.InvokeScript("eval", new object[] { "(function(){var q=\"" + q + "\";if(!q||!document.body)return false;var r=document.body.createTextRange();if(!r)return false;if(!r.findText(q))return false;r.select();return true;})()" });
                 if (!Convert.ToBoolean(found)) status.Text = "No more matches in this chapter.";
             }
             catch { status.Text = "Find is not supported by this document."; }
