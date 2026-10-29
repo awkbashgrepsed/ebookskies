@@ -222,7 +222,7 @@ namespace EbookSkies
             bar.Items.Add(new ToolStripSeparator()); bar.Items.Add(searchBox); bar.Items.Add(find);
             Controls.Add(bar);
 
-            SplitContainer split = new SplitContainer(); split.Dock = DockStyle.Fill; split.SplitterDistance = 235;
+            SplitContainer split = new SplitContainer(); split.Dock = DockStyle.Fill; split.SplitterDistance = 165; split.FixedPanel = FixedPanel.Panel1; split.Panel1MinSize = 110; split.Panel2MinSize = 280;
             toc = new TreeView(); toc.Dock = DockStyle.Fill; toc.HideSelection = false;
             toc.AfterSelect += (s, e) => { BookItem bi = e.Node.Tag as BookItem; if (bi != null) OpenChapter(bi.SpineIndex, bi.Fragment); };
             split.Panel1.Controls.Add(toc);
@@ -302,7 +302,7 @@ namespace EbookSkies
                 if (old != null) old.OuterHtml = "";
                 HtmlElement style = browser.Document.CreateElement("style"); style.Id = "ebookskies-reader-style";
                 style.SetAttribute("type", "text/css");
-                style.InnerText = "html,body{font-size:" + fontPercent + "% !important;line-height:1.55 !important;} body{padding:1.4em 2em !important;max-width:52em !important;margin:0 auto !important;overflow-wrap:break-word;} img,svg{max-width:100% !important;height:auto !important;} pre{white-space:pre-wrap !important;}";
+                style.InnerText = "html,body{font-size:" + fontPercent + "% !important;line-height:1.55 !important;} body{padding:1.4em 2em !important;max-width:52em !important;margin:0 auto !important;overflow-wrap:break-word;} img,svg{max-width:100% !important;height:auto !important;} " + (chapterIndex == 0 ? "body img:first-of-type{display:block !important;width:90% !important;max-width:90% !important;height:auto !important;margin:1em auto !important;}" : "") + " pre{white-space:pre-wrap !important;}";
                 head.AppendChild(style);
             }
             catch { }
