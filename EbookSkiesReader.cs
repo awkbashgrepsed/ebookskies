@@ -302,8 +302,18 @@ namespace EbookSkies
                 if (old != null) old.OuterHtml = "";
                 HtmlElement style = browser.Document.CreateElement("style"); style.Id = "ebookskies-reader-style";
                 style.SetAttribute("type", "text/css");
-                style.InnerText = "html,body{font-size:" + fontPercent + "% !important;line-height:1.55 !important;} body{padding:1.4em 2em !important;max-width:52em !important;margin:0 auto !important;overflow-wrap:break-word;} img,svg{max-width:100% !important;height:auto !important;} " + (chapterIndex == 0 ? "body img:first-of-type{display:block !important;width:90% !important;max-width:90% !important;height:auto !important;margin:1em auto !important;}" : "") + " pre{white-space:pre-wrap !important;}";
+                style.InnerText = "html,body{font-size:" + fontPercent + "% !important;line-height:1.55 !important;} body{padding:1.4em 2em !important;max-width:52em !important;margin:0 auto !important;overflow-wrap:break-word;} img,svg{max-width:100% !important;height:auto !important;} " + (chapterIndex == 0 ? "body{background:#fff !important;} body img:first-of-type{display:block !important;width:90% !important;max-width:90% !important;height:auto !important;margin:1em auto !important;}" : "") + " pre{white-space:pre-wrap !important;}";
                 head.AppendChild(style);
+
+                // Some EPUBs put the cover in a gray wrapper or use inline image sizing.
+                // Override those styles directly because the legacy MSHTML engine can
+                // give inline EPUB styles precedence over stylesheet rules.
+                if (chapterIndex == 0)
+                {
+                    browser.Document.InvokeScript("eval", new object[] {
+                        "(function(){var im=document.images&&document.images.length?document.images[0]:null;if(!im)return;im.style.cssText+=';display:block !important;width:90% !important;max-width:90% !important;height:auto !important;margin:1em auto !important;';for(var p=im.parentNode;p&&p.tagName&&p.tagName.toLowerCase()!=='body';p=p.parentNode){if(p.style){p.style.backgroundColor='transparent';p.style.backgroundImage='none';}}})()"
+                    });
+                }
             }
             catch { }
         }
